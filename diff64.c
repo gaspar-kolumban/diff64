@@ -19,7 +19,7 @@
 
 #define MAX_COMPARE_LENGTH        (64u)
 #define DEFAULT_RESULT_LENGTH     (32u)
-#define ELEMENT_LENGTH            (4u)
+#define ELEMENT_LENGTH            (3u)
 
 #if DEFAULT_RESULT_LENGTH > MAX_COMPARE_LENGTH
 #error You greedy bastard
@@ -79,17 +79,10 @@ static uint32_t get_bit(const uint64_t number, const uint32_t index)
 
 static void differentiate(const uint64_t left_number, const uint64_t right_number, const uint32_t result_length)
 {
-    const uint32_t result_size = (result_length * ELEMENT_LENGTH) + 1u;
-
-    char legend_result[result_size];
-    char upper_result[result_size];
-    char middle_result[result_size];
-    char lower_result[result_size];
-
-    memset(legend_result, 0, sizeof(legend_result));
-    memset(upper_result,  0, sizeof(upper_result));
-    memset(middle_result, 0, sizeof(middle_result));
-    memset(lower_result,  0, sizeof(lower_result));
+    char legend_result[(MAX_COMPARE_LENGTH * ELEMENT_LENGTH) + 1u] = {0};
+    char upper_result[(MAX_COMPARE_LENGTH * ELEMENT_LENGTH) + 1u]  = {0};
+    char middle_result[(MAX_COMPARE_LENGTH * ELEMENT_LENGTH) + 1u] = {0};
+    char lower_result[(MAX_COMPARE_LENGTH * ELEMENT_LENGTH) + 1u]  = {0};
 
     for (int32_t i = (result_length - 1), j = 0; i >= 0; --i, ++j)
     {
