@@ -42,7 +42,7 @@ static void print_help(const char *command)
 {
     printf("Usage: %s <operand 1> <operand 2> [result length]\n\n", command);
     printf("All values can be given as decimal, hexadecimal or octal values.\n");
-    printf("Result length is a number between 0 and %u.\n\n", MAX_COMPARE_LENGTH);
+    printf("Result length is a number between 1 and %u.\n\n", MAX_COMPARE_LENGTH);
     printf("Example: %s 0x1337 0x1338 15\n", command);
 }
 
