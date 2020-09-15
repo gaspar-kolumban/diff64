@@ -34,6 +34,7 @@ static void print_help(const char *command);
 static uint64_t parse_number(const char *number);
 static uint32_t parse_result_length(const char *number);
 static uint32_t get_bit(const uint64_t number, const uint32_t index);
+static uint32_t get_max_number_length(const uint64_t left_number, const uint64_t right_number);
 static void differentiate(const uint64_t left_number, const uint64_t right_number, const uint32_t result_length);
 
 /* **** Static functions **** */
@@ -77,12 +78,36 @@ static uint32_t get_bit(const uint64_t number, const uint32_t index)
     return ((number >> index) & 1uLL);
 }
 
+static uint32_t get_max_number_length(const uint64_t left_number, const uint64_t right_number)
+{
+    uint32_t left_number_length;
+    uint32_t right_number_length;
+    uint32_t max_number_length;
+    char number_length[MAX_COMPARE_LENGTH/4u + 1u];
+
+    snprintf(number_length, sizeof(number_length), "%lx", left_number);
+    left_number_length = strlen(number_length);
+    snprintf(number_length, sizeof(number_length), "%lx", right_number);
+    right_number_length = strlen(number_length);
+    if (right_number_length > left_number_length)
+    {
+        max_number_length = right_number_length;
+    }
+    else
+    {
+        max_number_length = left_number_length;
+    }
+
+    return max_number_length;
+}
+
 static void differentiate(const uint64_t left_number, const uint64_t right_number, const uint32_t result_length)
 {
     char legend_result[(MAX_COMPARE_LENGTH * ELEMENT_LENGTH) + 1u] = {0};
     char upper_result[(MAX_COMPARE_LENGTH * ELEMENT_LENGTH) + 1u]  = {0};
     char middle_result[(MAX_COMPARE_LENGTH * ELEMENT_LENGTH) + 1u] = {0};
     char lower_result[(MAX_COMPARE_LENGTH * ELEMENT_LENGTH) + 1u]  = {0};
+    const uint32_t max_number_length = get_max_number_length(left_number, right_number);
 
     for (int32_t i = (result_length - 1), j = 0; i >= 0; --i, ++j)
     {
@@ -97,9 +122,13 @@ static void differentiate(const uint64_t left_number, const uint64_t right_numbe
         snprintf(&(lower_result[result_index]),  write_size, "%*u", ELEMENT_LENGTH, right_bit);
     }
 
+    printf("  %*c ", max_number_length, ' ');
     printf("%s\n", legend_result);
+    printf("0x%0*lx ", max_number_length, left_number);
     printf("%s\n", upper_result);
+    printf("  %*c ", max_number_length, ' ');
     printf("%s\n", middle_result);
+    printf("0x%0*lx ", max_number_length, right_number);
     printf("%s\n", lower_result);
 }
 
