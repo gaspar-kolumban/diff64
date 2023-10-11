@@ -17,12 +17,7 @@
 /* **** Defines **** */
 
 #define MAX_COMPARE_LENGTH        (64u)
-#define DEFAULT_RESULT_LENGTH     (32u)
 #define ELEMENT_LENGTH            (3u)
-
-#if DEFAULT_RESULT_LENGTH > MAX_COMPARE_LENGTH
-#error You greedy bastard
-#endif
 
 #define ERROR_OPERAND_INVALID         (1)
 #define ERROR_RESULT_LENGTH_INVALID   (2)
@@ -34,6 +29,7 @@ static uint64_t parse_number(const char *number);
 static uint32_t parse_result_length(const char *number);
 static uint32_t get_bit(const uint64_t number, const uint32_t index);
 static uint32_t get_max_number_length(const uint64_t left_number, const uint64_t right_number);
+static uint32_t get_result_length(const uint64_t left_number, const uint64_t right_number);
 static void differentiate(const uint64_t left_number, const uint64_t right_number, const uint32_t result_length);
 
 /* **** Static functions **** */
@@ -100,6 +96,16 @@ static uint32_t get_max_number_length(const uint64_t left_number, const uint64_t
     return max_number_length;
 }
 
+static uint32_t get_result_length(const uint64_t left_number, const uint64_t right_number)
+{
+    const uint64_t largest = left_number > right_number ? left_number : right_number;
+    uint32_t result_length = MAX_COMPARE_LENGTH;
+    if      (largest < 0x000000100uLL) result_length = 8u;
+    else if (largest < 0x000010000uLL) result_length = 16u;
+    else if (largest < 0x100000000uLL) result_length = 32u;
+    return result_length;
+}
+
 static void differentiate(const uint64_t left_number, const uint64_t right_number, const uint32_t result_length)
 {
     char legend_result[(MAX_COMPARE_LENGTH * ELEMENT_LENGTH) + 1u] = {0};
@@ -137,7 +143,9 @@ int main(const int argc, const char *argv[])
 {
     if (3 == argc)
     {
-        differentiate(parse_number(argv[1]), parse_number(argv[2]), DEFAULT_RESULT_LENGTH);
+        const uint64_t left_number = parse_number(argv[1]);
+        const uint64_t right_number = parse_number(argv[2]);
+        differentiate(left_number, right_number, get_result_length(left_number, right_number));
     }
     else if (4 == argc)
     {
