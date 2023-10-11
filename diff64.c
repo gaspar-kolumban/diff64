@@ -77,23 +77,14 @@ static uint32_t get_max_number_length(const uint64_t left_number, const uint64_t
 {
     uint32_t left_number_length;
     uint32_t right_number_length;
-    uint32_t max_number_length;
     char number_length[MAX_COMPARE_LENGTH/4u + 1u];
 
     snprintf(number_length, sizeof(number_length), "%lx", left_number);
     left_number_length = strlen(number_length);
     snprintf(number_length, sizeof(number_length), "%lx", right_number);
     right_number_length = strlen(number_length);
-    if (right_number_length > left_number_length)
-    {
-        max_number_length = right_number_length;
-    }
-    else
-    {
-        max_number_length = left_number_length;
-    }
 
-    return max_number_length;
+    return (right_number_length > left_number_length) ? right_number_length : left_number_length;
 }
 
 static uint32_t get_result_length(const uint64_t left_number, const uint64_t right_number)
